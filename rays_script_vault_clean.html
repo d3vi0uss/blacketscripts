@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ray's Script Vault</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090e14;color:#e7edf3;font-family:Inter,Arial,sans-serif;min-height:100vh}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+#lock{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.lock-card{width:390px;max-width:94vw;background:#121a23;border:1px solid #273544;border-radius:14px;padding:30px;box-shadow:0 25px 80px rgba(0,0,0,.5)}
+.logo{width:42px;height:42px;border-radius:10px;background:#356d9f;display:grid;place-items:center;font-weight:900;font-size:18px;margin-bottom:20px}
+h1{font-size:24px;margin:0 0 6px}.muted{color:#7f8d9b;font-size:12px;line-height:1.5}
+.field{margin-top:22px}.field label{display:block;color:#9ba8b5;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+input{width:100%;background:#0c131b;border:1px solid #304050;color:#fff;border-radius:8px;padding:11px;outline:none}
+input:focus{border-color:#4c8bc0}
+.primary{width:100%;border:0;background:#356d9f;color:#fff;border-radius:8px;padding:11px;margin-top:12px;font-weight:800}
+.error{height:18px;color:#e06b6b;font-size:11px;margin-top:9px}
+
+#app{display:none;min-height:100vh}
+.top{height:68px;background:#101720;border-bottom:1px solid #263443;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.brand{display:flex;align-items:center;gap:11px}.brand-icon{width:34px;height:34px;border-radius:8px;background:#356d9f;display:grid;place-items:center;font-weight:900}.brand-name{font-weight:850;font-size:16px}.made{font-size:9px;color:#6f7d8b;margin-top:2px}
+.lock-btn{background:#192530;border:1px solid #304050;color:#b9c5cf;border-radius:7px;padding:8px 12px;font-size:11px}
+
+.layout{max-width:1050px;margin:auto;padding:22px;display:grid;grid-template-columns:210px 1fr;gap:14px}
+.sidebar,.content{background:#111a23;border:1px solid #263544;border-radius:10px}
+.sidebar{padding:8px;height:max-content}
+.section-title{font-size:9px;color:#687786;text-transform:uppercase;font-weight:800;padding:9px 9px 7px;letter-spacing:.7px}
+.script-tab{width:100%;border:0;background:transparent;color:#aeb9c4;text-align:left;padding:11px 10px;border-radius:7px;font-size:11px;margin-bottom:3px}
+.script-tab:hover{background:#18232e}.script-tab.active{background:#20384d;color:#fff}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5b91bb;margin-right:8px;vertical-align:1px}
+
+.panel{display:none}.panel.active{display:block}
+.panel-head{padding:18px 20px;border-bottom:1px solid #263544;display:flex;justify-content:space-between;align-items:center}
+.panel-title{font-weight:850;font-size:16px}.panel-desc{font-size:10px;color:#71808e;margin-top:4px}
+.badge{font-size:9px;background:#192b3a;color:#7faed1;border:1px solid #29445b;padding:5px 8px;border-radius:5px}
+.code-wrap{padding:12px}
+textarea{display:block;width:100%;height:500px;resize:vertical;background:#0a1118;border:1px solid #22313f;border-radius:7px;color:#cbd6df;padding:14px;font:11px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;outline:none}
+.actions{display:flex;gap:7px;padding:0 12px 12px}
+.action{border:0;border-radius:7px;padding:9px 13px;font-size:11px;font-weight:800}
+.copy{background:#356d9f;color:#fff}.select{background:#202d39;color:#cbd5de}
+.tip{margin:0 12px 14px;padding:10px;background:#0d151d;border:1px solid #202e3b;border-radius:7px;color:#71808d;font-size:10px;line-height:1.5}
+
+@media(max-width:700px){.layout{grid-template-columns:1fr;padding:12px}.sidebar{display:flex;overflow:auto;gap:4px}.section-title{display:none}.script-tab{white-space:nowrap;width:auto;margin:0}.panel-head{padding:14px}.top{padding:0 14px}}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  <div class="lock-card">
+    <div class="logo">R</div>
+    <h1>Script Vault</h1>
+    <div class="muted">Your private Blacket bookmarklet library.</div>
+    <div class="field">
+      <label id="lockLabel">Select a script</label>
+      <select id="scriptChoice" style="width:100%;background:#0c131b;border:1px solid #304050;color:#fff;border-radius:8px;padding:11px;outline:none">
+        <option value="open">Auto Open</option>
+        <option value="sell">Auto Sell Duplicates</option>
+      </select>
+    </div>
+    <div class="field" style="margin-top:14px">
+      <label>Password</label>
+      <input id="pw" type="password" placeholder="Enter script password" autocomplete="off">
+    </div>
+    <button class="primary" id="unlock">Unlock Script</button>
+    <div class="error" id="err"></div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-icon">R</div>
+      <div><div class="brand-name">Script Vault</div><div class="made">made by ray</div></div>
+    </div>
+    <button class="lock-btn" id="logout">Lock Vault</button>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="section-title">Unlocked Script</div>
+      <div id="unlockedScript" style="padding:11px 10px;color:#fff;font-size:11px">
+        <span class="dot"></span><span id="unlockedName">Auto Open</span>
+      </div>
+      <div class="muted" style="padding:8px 10px;font-size:10px">
+        Only the script authenticated above is available in this session.
+      </div>
+    </aside>
+
+    <section class="content">
+      <div class="panel active" id="open">
+        <div class="panel-head">
+          <div><div class="panel-title">Auto Open</div><div class="panel-desc">Pack-opening bookmarklet</div></div>
+          <div class="badge">LOCKED SCRIPT</div>
+        </div>
+        <div class="code-wrap"><textarea id="openCode" readonly placeholder="Paste your Auto Open script here..."></textarea></div>
+        <div class="actions"><button class="action copy" data-copy="openCode">Copy Script</button></div>
+        <div class="tip">To replace this script, edit the <b>AUTO_OPEN</b> variable in the HTML source.</div>
+      </div>
+
+      <div class="panel" id="sell">
+        <div class="panel-head">
+          <div><div class="panel-title">Auto Sell Duplicates</div><div class="panel-desc">Duplicate-selling bookmarklet</div></div>
+          <div class="badge">LOCKED SCRIPT</div>
+        </div>
+        <div class="code-wrap"><textarea id="sellCode" readonly placeholder="Paste your Auto Sell script here..."></textarea></div>
+        <div class="actions"><button class="action copy" data-copy="sellCode">Copy Script</button></div>
+        <div class="tip">To replace this script, edit the <b>AUTO_SELL</b> variable in the HTML source.</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+/*
+  ===========================
+  SCRIPT VAULT SETTINGS
+  ===========================
+
+  Change these two passwords.
+  Each script has its own password.
+
+  NOTE: This is a client-side lock. Anyone who can inspect/edit the HTML
+  source can technically find the passwords and scripts.
+*/
+const AUTO_OPEN_PASSWORD = "OPEN2026";
+const AUTO_SELL_PASSWORD = "SELL2026";
+
+/*
+  PASTE YOUR SCRIPTS BETWEEN THE BACKTICKS BELOW.
+
+  Example:
+  const AUTO_OPEN = `javascript:(()=>{ ... })()`;
+*/
+const AUTO_OPEN = ``;
+
+const AUTO_SELL = ``;
+
+const passwords = {
+  open: AUTO_OPEN_PASSWORD,
+  sell: AUTO_SELL_PASSWORD
+};
+
+const lock = document.getElementById("lock");
+const app = document.getElementById("app");
+const choice = document.getElementById("scriptChoice");
+const pw = document.getElementById("pw");
+const err = document.getElementById("err");
+
+function unlock(){
+  const selected = choice.value;
+  if(pw.value === passwords[selected]){
+    lock.style.display = "none";
+    app.style.display = "block";
+    err.textContent = "";
+    pw.value = "";
+
+    // Only expose the script that was authenticated.
+    document.getElementById("open").style.display = selected === "open" ? "block" : "none";
+    document.getElementById("sell").style.display = selected === "sell" ? "block" : "none";
+    document.getElementById("unlockedName").textContent =
+      selected === "open" ? "Auto Open" : "Auto Sell Duplicates";
+  }else{
+    err.textContent = "Incorrect password for the selected script.";
+    pw.select();
+  }
+}
+
+document.getElementById("unlock").onclick = unlock;
+pw.addEventListener("keydown",e=>{if(e.key==="Enter")unlock()});
+
+document.getElementById("logout").onclick=()=>{
+  app.style.display="none";
+  lock.style.display="flex";
+  pw.value="";
+  err.textContent="";
+  document.getElementById("open").style.display="none";
+  document.getElementById("sell").style.display="none";
+  pw.focus();
+};
+
+document.getElementById("openCode").value = AUTO_OPEN;
+document.getElementById("sellCode").value = AUTO_SELL;
+
+document.querySelectorAll(".copy").forEach(btn=>{
+  btn.onclick=async()=>{
+    const el=document.getElementById(btn.dataset.copy);
+    if(!el.value){alert("No script has been added yet.");return}
+    try{
+      await navigator.clipboard.writeText(el.value);
+    }catch{
+      el.select();
+      document.execCommand("copy");
+      el.setSelectionRange(0,0);
+    }
+    const old=btn.textContent;
+    btn.textContent="Copied!";
+    setTimeout(()=>btn.textContent=old,1100);
+  };
+});
+</script>
+</body>
+</html>
