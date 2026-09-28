@@ -1,0 +1,1265 @@
+// ==UserScript==
+// @name         Blacket - Sakura Night 🌸
+// @namespace    https://tampermonkey.net/
+// @version      4.0
+// @description  Pink Sakura Night theme for Blacket with animated cherry blossom petals
+// @author       You
+// @match        https://blacket.org/*
+// @match        https://*.blacket.org/*
+// @grant        none
+// @run-at       document-start
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    /* =========================================================
+       🌸 BLACKET SAKURA NIGHT
+       ========================================================= */
+
+    const THEME_ID = 'blacket-sakura-night-v4';
+
+    const css = `
+
+    /* =========================================================
+       🎨 SAKURA COLOR PALETTE
+       ========================================================= */
+
+    :root {
+        --sakura-bg: #120910;
+        --sakura-bg2: #1c0d18;
+
+        --sakura-panel: rgba(39, 18, 34, .96);
+        --sakura-panel-light: rgba(55, 23, 46, .97);
+
+        --sakura-pink: #ff6fa8;
+        --sakura-pink2: #ff3f8f;
+        --sakura-soft: #ffc0d9;
+        --sakura-light: #ffd9e7;
+
+        --sakura-purple: #b05cff;
+
+        --sakura-text: #fff8fc;
+        --sakura-muted: #c7a9b8;
+
+        --sakura-border: rgba(255, 105, 165, .30);
+
+        --sakura-shadow:
+            0 10px 30px rgba(0,0,0,.48),
+            0 0 18px rgba(255,90,160,.06);
+
+        --sakura-glow:
+            0 0 8px rgba(255,105,165,.30),
+            0 0 20px rgba(255,105,165,.15);
+
+        --sakura-glow-small:
+            0 0 8px rgba(255,105,165,.42);
+    }
+
+
+    /* =========================================================
+       🌙 GLOBAL PAGE
+       ========================================================= */
+
+    html,
+    body {
+        background:
+            radial-gradient(
+                circle at 70% 5%,
+                rgba(255,130,180,.12),
+                transparent 20%
+            ),
+            radial-gradient(
+                circle at 15% 75%,
+                rgba(255,70,145,.07),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 80% 85%,
+                rgba(176,92,255,.07),
+                transparent 28%
+            ),
+            linear-gradient(
+                135deg,
+                #120910,
+                #1d0d19 50%,
+                #0e080d
+            ) !important;
+
+        color: var(--sakura-text) !important;
+    }
+
+
+    body {
+        overflow-x: hidden !important;
+    }
+
+
+    /* =========================================================
+       🌸 MAIN BLACKET BACKGROUND
+       ========================================================= */
+
+    .styles__background___2J-JA-camelCase {
+
+        background:
+            radial-gradient(
+                circle at 50% 0%,
+                rgba(255,105,165,.18),
+                transparent 38%
+            ),
+            radial-gradient(
+                circle at 85% 25%,
+                rgba(255,70,145,.10),
+                transparent 25%
+            ),
+            radial-gradient(
+                circle at 10% 85%,
+                rgba(176,92,255,.08),
+                transparent 28%
+            ),
+            linear-gradient(
+                135deg,
+                #120910,
+                #1d0d19 50%,
+                #0e080d
+            ) !important;
+
+        background-attachment: fixed !important;
+    }
+
+
+    /* =========================================================
+       ✨ SUBTLE BACKGROUND GLOW
+       ========================================================= */
+
+    .styles__background___2J-JA-camelCase::before {
+
+        content: "";
+
+        position: absolute;
+
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            radial-gradient(
+                circle at 65% 7%,
+                rgba(255,180,210,.08),
+                transparent 10%
+            ),
+            radial-gradient(
+                circle at 35% 25%,
+                rgba(255,105,165,.04),
+                transparent 20%
+            );
+
+        z-index: 0;
+    }
+
+
+    /* =========================================================
+       🌸 SIDEBAR
+       ========================================================= */
+
+    .styles__sidebar___1XqWi-camelCase {
+
+        background:
+            linear-gradient(
+                180deg,
+                #2a1626 0%,
+                #21121d 40%,
+                #160b13 75%,
+                #0e080d 100%
+            ) !important;
+
+        border-right:
+            1px solid rgba(255,105,165,.24) !important;
+
+        box-shadow:
+            8px 0 28px rgba(0,0,0,.45),
+            inset -1px 0 rgba(255,105,165,.07) !important;
+
+        backdrop-filter:
+            blur(10px) !important;
+    }
+
+
+    /* Sidebar logo */
+
+    .styles__blooketText___1pMBG-camelCase {
+
+        color:
+            #fffaff !important;
+
+        text-shadow:
+            0 0 4px rgba(255,255,255,.30),
+            2px 0 #ff5b9d,
+            -2px 0 #ff9bc1,
+            0 0 16px rgba(255,105,165,.40) !important;
+    }
+
+
+    /* Sidebar links */
+
+    .styles__sidebar___1XqWi-camelCase a,
+    .styles__sidebar___1XqWi-camelCase button {
+
+        transition:
+            background .15s ease,
+            box-shadow .15s ease,
+            color .15s ease,
+            transform .15s ease !important;
+    }
+
+
+    .styles__sidebar___1XqWi-camelCase a:hover,
+    .styles__sidebar___1XqWi-camelCase button:hover {
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255,105,165,.18),
+                rgba(255,105,165,.05)
+            ) !important;
+
+        color:
+            #ffffff !important;
+
+        box-shadow:
+            inset 3px 0 var(--sakura-pink),
+            0 0 10px rgba(255,105,165,.08) !important;
+    }
+
+
+    /* Active sidebar */
+
+    .styles__sidebar___1XqWi-camelCase
+    [class*="active"] {
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(255,105,165,.17),
+                rgba(176,92,255,.05)
+            ) !important;
+
+        box-shadow:
+            inset 3px 0 var(--sakura-pink),
+            0 0 12px rgba(255,105,165,.10) !important;
+
+        color:
+            white !important;
+    }
+
+
+    /* =========================================================
+       🌙 TOP HEADER
+       ========================================================= */
+
+    .styles__header___22Ne2-camelCase {
+
+        background:
+            rgba(18,9,16,.90) !important;
+
+        border-bottom:
+            1px solid rgba(255,105,165,.18) !important;
+
+        box-shadow:
+            0 5px 20px rgba(0,0,0,.35) !important;
+
+        backdrop-filter:
+            blur(14px) !important;
+    }
+
+
+    .styles__headerRow___1tdPa-camelCase {
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(53,25,45,.92),
+                rgba(33,16,30,.92)
+            ) !important;
+
+        color:
+            #ffffff !important;
+    }
+
+
+    /* =========================================================
+       🪷 GENERAL CONTAINERS
+       ========================================================= */
+
+    .styles__container___1BPm9-camelCase,
+    .styles__container___2VzTy-camelCase,
+    .styles__container___3St5B-camelCase {
+
+        background:
+            transparent !important;
+    }
+
+
+    .styles__profileContainer___CSuIE-camelCase,
+    .styles__infoContainer___2uI-S-camelCase,
+    .styles__statContainer___QKuOF-camelCase,
+    .styles__topStatsContainer___dWfN7-camelCase,
+    .styles__statsContainer___1r5je-camelCase,
+    .styles__bottomStatsContainer___1O6MJ-camelCase,
+    .styles__statsContainer___QnrRB-camelCase {
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(53,23,45,.97),
+                rgba(30,13,25,.97)
+            ) !important;
+
+        color:
+            var(--sakura-text) !important;
+
+        border:
+            1px solid var(--sakura-border) !important;
+
+        box-shadow:
+            var(--sakura-shadow),
+            inset 0 1px rgba(255,255,255,.025) !important;
+
+        backdrop-filter:
+            blur(8px) !important;
+    }
+
+
+    /* =========================================================
+       🌺 SECTION HEADERS
+       ========================================================= */
+
+    .styles__containerHeader___3xghM-camelCase {
+
+        background:
+            linear-gradient(
+                135deg,
+                #552b47,
+                #3b1d33,
+                #281429
+            ) !important;
+
+        color:
+            white !important;
+
+        border:
+            1px solid rgba(255,105,165,.34) !important;
+
+        box-shadow:
+            0 4px 15px rgba(0,0,0,.30),
+            0 0 14px rgba(255,105,165,.08) !important;
+
+        text-shadow:
+            0 2px 6px rgba(0,0,0,.30) !important;
+    }
+
+
+    .styles__containerHeaderInside___2omQm-camelCase {
+
+        color:
+            white !important;
+    }
+
+
+    /* =========================================================
+       💗 BUTTONS
+       ========================================================= */
+
+    button,
+    .styles__button___2hNZo-camelCase,
+    .styles__buttonFilled___23Dcn-camelCase {
+
+        background:
+            linear-gradient(
+                135deg,
+                #ff74aa,
+                #ff3f8f
+            ) !important;
+
+        color:
+            #ffffff !important;
+
+        border:
+            none !important;
+
+        border-radius:
+            7px !important;
+
+        box-shadow:
+            0 4px 11px rgba(0,0,0,.35) !important;
+
+        transition:
+            transform .15s ease,
+            filter .15s ease,
+            box-shadow .15s ease !important;
+    }
+
+
+    button:hover,
+    .styles__button___2hNZo-camelCase:hover,
+    .styles__buttonFilled___23Dcn-camelCase:hover {
+
+        filter:
+            brightness(1.10) !important;
+
+        transform:
+            translateY(-2px) !important;
+
+        box-shadow:
+            0 0 8px rgba(255,105,165,.42),
+            0 0 20px rgba(255,105,165,.18) !important;
+    }
+
+
+    button:active {
+
+        transform:
+            translateY(1px) !important;
+    }
+
+
+    /* =========================================================
+       🔎 INPUTS
+       ========================================================= */
+
+    input,
+    textarea,
+    select {
+
+        background:
+            rgba(14,7,13,.92) !important;
+
+        color:
+            #ffffff !important;
+
+        border:
+            1px solid rgba(255,105,165,.24) !important;
+
+        border-radius:
+            7px !important;
+
+        outline:
+            none !important;
+
+        box-shadow:
+            inset 0 2px 10px rgba(0,0,0,.30) !important;
+    }
+
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+
+        border-color:
+            #ff6fa8 !important;
+
+        box-shadow:
+            0 0 10px rgba(255,105,165,.18) !important;
+    }
+
+
+    input::placeholder,
+    textarea::placeholder {
+
+        color:
+            #a67f92 !important;
+    }
+
+
+    /* =========================================================
+       💬 CHAT
+       ========================================================= */
+
+    .styles__chatCurrentRoom___MCaV4-camelCase,
+    .styles__chatRoomsListContainer___Gk4Av-camelCase,
+    .styles__chatRooms___o5ASb-camelCase,
+    .styles__chatInputContainer___gkR4A-camelCase,
+    .styles__chatMessagesContainer___8J3rW-camelCase {
+
+        background:
+            rgba(19,10,18,.84) !important;
+
+        color:
+            #fff !important;
+    }
+
+
+    .styles__chatInputContainer___gkR4A-camelCase {
+
+        border-top:
+            1px solid rgba(255,105,165,.15) !important;
+
+        box-shadow:
+            0 -5px 18px rgba(0,0,0,.22) !important;
+    }
+
+
+    /* =========================================================
+       🐻 BLOOK GRID
+       ========================================================= */
+
+    .styles__blookGridContainer___AK47P-camelCase {
+
+        background:
+            rgba(34,17,31,.96) !important;
+
+        border:
+            1px solid rgba(255,105,165,.22) !important;
+
+        box-shadow:
+            0 12px 35px rgba(0,0,0,.52) !important;
+    }
+
+
+    /* =========================================================
+       🛍️ BAZAAR
+       ========================================================= */
+
+    .styles__bazaarItems___KmNa2-camelCase {
+
+        background:
+            transparent !important;
+    }
+
+
+    .styles__bazaarItem___Meg69-camelCase {
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(51,24,43,.98),
+                rgba(27,13,24,.98)
+            ) !important;
+
+        border:
+            1px solid rgba(255,105,165,.18) !important;
+
+        border-radius:
+            9px !important;
+
+        box-shadow:
+            0 6px 16px rgba(0,0,0,.35) !important;
+
+        transition:
+            transform .18s ease,
+            box-shadow .18s ease,
+            border-color .18s ease !important;
+    }
+
+
+    .styles__bazaarItem___Meg69-camelCase:hover {
+
+        transform:
+            translateY(-4px) scale(1.01) !important;
+
+        border-color:
+            rgba(255,105,165,.48) !important;
+
+        box-shadow:
+            0 10px 25px rgba(0,0,0,.50),
+            0 0 16px rgba(255,105,165,.15) !important;
+    }
+
+
+    /* =========================================================
+       👤 PROFILE DROPDOWN
+       ========================================================= */
+
+    .styles__profileDropdownMenu___2jUAA-camelCase,
+    .styles__profileDropdown___1A6vV-camelCase,
+    [role="menu"],
+    [role="listbox"] {
+
+        background:
+            rgba(30,14,26,.98) !important;
+
+        color:
+            white !important;
+
+        border:
+            1px solid rgba(255,105,165,.23) !important;
+
+        box-shadow:
+            0 15px 35px rgba(0,0,0,.60) !important;
+
+        backdrop-filter:
+            blur(12px) !important;
+    }
+
+
+    .styles__profileDropdownOption___ljZXD-camelCase {
+
+        background:
+            transparent !important;
+
+        color:
+            white !important;
+
+        transition:
+            background .15s ease !important;
+    }
+
+
+    .styles__profileDropdownOption___ljZXD-camelCase:hover {
+
+        background:
+            rgba(255,105,165,.15) !important;
+
+        color:
+            white !important;
+    }
+
+
+    /* =========================================================
+       🪙 TOKENS
+       ========================================================= */
+
+    .styles__tokenContainer___3yBv--camelCase,
+    .styles__myTokenAmount___ANKHA-camelCase,
+    .styles__otherTokenAmount___SEGGS-camelCase {
+
+        background:
+            rgba(30,15,27,.94) !important;
+
+        border:
+            1px solid rgba(255,105,165,.18) !important;
+
+        box-shadow:
+            0 4px 12px rgba(0,0,0,.25) !important;
+    }
+
+
+    /* =========================================================
+       🔗 LINKS
+       ========================================================= */
+
+    a {
+
+        color:
+            var(--sakura-soft) !important;
+
+        transition:
+            color .15s ease,
+            text-shadow .15s ease !important;
+    }
+
+
+    a:hover {
+
+        color:
+            #ffe0eb !important;
+
+        text-shadow:
+            0 0 8px rgba(255,105,165,.42) !important;
+    }
+
+
+    /* =========================================================
+       📊 TABLES
+       ========================================================= */
+
+    table {
+
+        background:
+            rgba(27,13,25,.96) !important;
+
+        color:
+            white !important;
+
+        border-color:
+            rgba(255,105,165,.16) !important;
+    }
+
+
+    th {
+
+        background:
+            #3b1d33 !important;
+
+        color:
+            #ffc3da !important;
+
+        border-color:
+            rgba(255,105,165,.16) !important;
+    }
+
+
+    td {
+
+        background:
+            transparent !important;
+
+        border-color:
+            rgba(255,105,165,.07) !important;
+    }
+
+
+    tr:hover td {
+
+        background:
+            rgba(255,105,165,.035) !important;
+    }
+
+
+    /* =========================================================
+       📏 DIVIDERS
+       ========================================================= */
+
+    hr {
+
+        height:
+            1px !important;
+
+        border:
+            0 !important;
+
+        background:
+            linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,105,165,.65),
+                rgba(255,192,217,.45),
+                transparent
+            ) !important;
+
+        box-shadow:
+            0 0 7px rgba(255,105,165,.20) !important;
+    }
+
+
+    /* =========================================================
+       📜 SCROLLBAR
+       ========================================================= */
+
+    ::-webkit-scrollbar {
+
+        width:
+            9px;
+
+        height:
+            9px;
+    }
+
+
+    ::-webkit-scrollbar-track {
+
+        background:
+            #0d070c;
+    }
+
+
+    ::-webkit-scrollbar-thumb {
+
+        background:
+            linear-gradient(
+                180deg,
+                #ffb3cf,
+                #ff6fa8,
+                #dc4c88
+            );
+
+        border-radius:
+            10px;
+
+        border:
+            2px solid #0d070c;
+    }
+
+
+    ::-webkit-scrollbar-thumb:hover {
+
+        background:
+            #ff8fba;
+    }
+
+
+    /* =========================================================
+       ✨ SELECTION
+       ========================================================= */
+
+    ::selection {
+
+        background:
+            #df568e !important;
+
+        color:
+            white !important;
+    }
+
+
+    /* =========================================================
+       🌸 PETAL ANIMATION
+       ========================================================= */
+
+    @keyframes sakuraFall {
+
+        0% {
+            transform:
+                translate3d(0, -70px, 0)
+                rotate(0deg)
+                scale(1);
+        }
+
+        20% {
+            transform:
+                translate3d(
+                    calc(var(--drift) * .15),
+                    20vh,
+                    0
+                )
+                rotate(75deg)
+                scale(1.08);
+        }
+
+        40% {
+            transform:
+                translate3d(
+                    calc(var(--drift) * -.30),
+                    40vh,
+                    0
+                )
+                rotate(155deg)
+                scale(.92);
+        }
+
+        60% {
+            transform:
+                translate3d(
+                    calc(var(--drift) * .45),
+                    60vh,
+                    0
+                )
+                rotate(230deg)
+                scale(1.10);
+        }
+
+        80% {
+            transform:
+                translate3d(
+                    calc(var(--drift) * .75),
+                    80vh,
+                    0
+                )
+                rotate(305deg)
+                scale(.95);
+        }
+
+        100% {
+            transform:
+                translate3d(
+                    var(--drift),
+                    112vh,
+                    0
+                )
+                rotate(390deg)
+                scale(1);
+        }
+    }
+
+
+    /* =========================================================
+       🌸 PETALS
+       ========================================================= */
+
+    #sakura-petal-layer {
+
+        position:
+            fixed !important;
+
+        inset:
+            0 !important;
+
+        width:
+            100vw !important;
+
+        height:
+            100vh !important;
+
+        pointer-events:
+            none !important;
+
+        overflow:
+            hidden !important;
+
+        z-index:
+            99998 !important;
+    }
+
+
+    .sakura-petal {
+
+        position:
+            absolute;
+
+        top:
+            -70px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #ffe1eb 0%,
+                #ffb0cb 38%,
+                #ff75aa 72%,
+                #f24f8f 100%
+            );
+
+        border-radius:
+            100% 0 100% 0;
+
+        filter:
+            drop-shadow(
+                0 0 5px rgba(255,105,165,.48)
+            );
+
+        animation-name:
+            sakuraFall;
+
+        animation-timing-function:
+            linear;
+
+        animation-iteration-count:
+            infinite;
+
+        transform-origin:
+            center;
+
+        will-change:
+            transform;
+    }
+
+
+    /* =========================================================
+       🌙 MOON GLOW
+       ========================================================= */
+
+    #sakura-moon {
+
+        position:
+            fixed;
+
+        width:
+            130px;
+
+        height:
+            130px;
+
+        border-radius:
+            50%;
+
+        top:
+            35px;
+
+        right:
+            50px;
+
+        pointer-events:
+            none;
+
+        z-index:
+            1;
+
+        background:
+            radial-gradient(
+                circle at 35% 35%,
+                #fff7fb 0%,
+                #ffdce9 45%,
+                rgba(255,180,210,.55) 65%,
+                rgba(255,140,190,0) 72%
+            );
+
+        opacity:
+            .13;
+
+        filter:
+            blur(.3px);
+
+        box-shadow:
+            0 0 40px rgba(255,150,195,.16),
+            0 0 90px rgba(255,105,165,.10);
+    }
+
+
+    /* =========================================================
+       🌸 SMALL FLOATING GLOW
+       ========================================================= */
+
+    #sakura-glow {
+
+        position:
+            fixed;
+
+        inset:
+            0;
+
+        pointer-events:
+            none;
+
+        z-index:
+            0;
+
+        background:
+            radial-gradient(
+                ellipse at 50% 110%,
+                rgba(255,105,165,.07),
+                transparent 45%
+            );
+    }
+
+
+    `;
+
+
+    /* =========================================================
+       INSTALL CSS
+       ========================================================= */
+
+    function installCSS() {
+
+        let old = document.getElementById(THEME_ID);
+
+        if (old) {
+            old.remove();
+        }
+
+        const newStyle = document.createElement('style');
+
+        newStyle.id = THEME_ID;
+        newStyle.textContent = css;
+
+        document.head.appendChild(newStyle);
+    }
+
+
+    /* =========================================================
+       🌸 CREATE PETALS
+       ========================================================= */
+
+    function createPetals() {
+
+        if (!document.body) return;
+
+        if (document.getElementById('sakura-petal-layer')) {
+            return;
+        }
+
+        /* Petal layer */
+
+        const layer = document.createElement('div');
+
+        layer.id =
+            'sakura-petal-layer';
+
+        /* Create 30 petals */
+
+        for (let i = 0; i < 30; i++) {
+
+            const petal =
+                document.createElement('span');
+
+            petal.className =
+                'sakura-petal';
+
+            /*
+                Bigger petals:
+                roughly 16px - 32px
+            */
+
+            const size =
+                16 + Math.random() * 16;
+
+            const left =
+                Math.random() * 100;
+
+            const delay =
+                Math.random() * -18;
+
+            const duration =
+                9 + Math.random() * 12;
+
+            const drift =
+                -140 + Math.random() * 280;
+
+            const opacity =
+                .20 + Math.random() * .32;
+
+            petal.style.width =
+                `${size}px`;
+
+            petal.style.height =
+                `${size * .72}px`;
+
+            petal.style.left =
+                `${left}%`;
+
+            petal.style.opacity =
+                opacity;
+
+            petal.style.animationDuration =
+                `${duration}s`;
+
+            petal.style.animationDelay =
+                `${delay}s`;
+
+            petal.style.setProperty(
+                '--drift',
+                `${drift}px`
+            );
+
+            /*
+                Random starting rotation
+            */
+
+            petal.style.transform =
+                `rotate(${Math.random() * 360}deg)`;
+
+            layer.appendChild(petal);
+        }
+
+        document.body.appendChild(layer);
+
+
+        /* =====================================================
+           🌙 MOON
+           ===================================================== */
+
+        if (!document.getElementById('sakura-moon')) {
+
+            const moon =
+                document.createElement('div');
+
+            moon.id =
+                'sakura-moon';
+
+            document.body.appendChild(moon);
+        }
+
+
+        /* =====================================================
+           ✨ GLOW
+           ===================================================== */
+
+        if (!document.getElementById('sakura-glow')) {
+
+            const glow =
+                document.createElement('div');
+
+            glow.id =
+                'sakura-glow';
+
+            document.body.appendChild(glow);
+        }
+    }
+
+
+    /* =========================================================
+       🚀 START
+       ========================================================= */
+
+    function start() {
+
+        if (document.head) {
+            installCSS();
+        }
+
+        if (document.body) {
+            createPetals();
+        }
+    }
+
+
+    /* =========================================================
+       🧹 CLEANUP OLD VERSIONS
+       ========================================================= */
+
+    function cleanupOldThemes() {
+
+        const oldThemeIds = [
+            'blacket-sakura-theme',
+            'blacket-sakura-night',
+            'blacket-retro-arcade'
+        ];
+
+        oldThemeIds.forEach(id => {
+
+            const element =
+                document.getElementById(id);
+
+            if (element) {
+                element.remove();
+            }
+        });
+
+        /* Remove old petal layers */
+
+        [
+            'sakura-petal-layer',
+            'sakura-moon',
+            'sakura-glow'
+        ].forEach(id => {
+
+            const element =
+                document.getElementById(id);
+
+            if (element) {
+                element.remove();
+            }
+        });
+    }
+
+
+    cleanupOldThemes();
+
+
+    /* =========================================================
+       ⚡ INITIAL LOAD
+       ========================================================= */
+
+    if (document.readyState === 'loading') {
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            start,
+            { once: true }
+        );
+
+    } else {
+
+        start();
+    }
+
+
+    /* =========================================================
+       🔄 HANDLE BLACKET PAGE CHANGES
+       ========================================================= */
+
+    const observer =
+        new MutationObserver(() => {
+
+            if (!document.getElementById(THEME_ID) &&
+                document.head) {
+
+                installCSS();
+            }
+
+            if (!document.getElementById('sakura-petal-layer') &&
+                document.body) {
+
+                createPetals();
+            }
+        });
+
+
+    observer.observe(
+        document.documentElement,
+        {
+            childList: true,
+            subtree: true
+        }
+    );
+
+})();
